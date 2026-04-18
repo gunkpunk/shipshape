@@ -12,7 +12,12 @@ RUN git clone --depth 1 --branch "${CPSA_REF}" https://github.com/mitre/cpsa.git
     cabal install \
         --install-method=copy \
         --installdir=/usr/local/bin \
-        --overwrite-policy=always
+        --overwrite-policy=always && \
+    mkdir -p /usr/local/share/cpsa && \
+    cp -r /opt/cpsa/doc/. /usr/local/share/cpsa/ && \
+    chmod -R a+rX /usr/local/share/cpsa
+
+ENV cpsa_datadir=/usr/local/share/cpsa
 
 RUN useradd --create-home --shell /bin/bash cpsa
 USER cpsa
