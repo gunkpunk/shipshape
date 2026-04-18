@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# cpsa — thin wrapper that forwards arguments to the cpsa container.
+# Current directory is bind-mounted at /work, so paths are relative to $PWD.
+set -euo pipefail
+IMAGE="${CPSA_IMAGE:-cpsa}"
+if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
+    echo "cpsa: image '$IMAGE' not found locally." >&2
+    echo "     Build it with:  (cd \"$(dirname "$0")/..\" && docker build -t cpsa .)" >&2
+    exit 1
+fi
+exec docker run --rm -v "$PWD:/work" -w /work "$IMAGE" "$@"
